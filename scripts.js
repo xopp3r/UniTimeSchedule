@@ -97,7 +97,7 @@ function addWeekdays(weekdayName, dateStr, highlighted, number) {
 
 function displayWeekdays(selectedWeekday) {
     const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
-    const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
+    const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
 
     const today = new Date();
 
@@ -113,7 +113,7 @@ function displayWeekdays(selectedWeekday) {
         addWeekdays(weekdays[(day.getDay() + 6) % 7], 
                     dayAndMonth[0] + ' ' + months[Number(dayAndMonth[1]) - 1],
                     document.selectedWeekday == i,
-                    i )
+                    i );
 
     }
 }
@@ -127,7 +127,7 @@ function getMinutes(str) {
 
 function displaySchedule(schedule, weekdayIndex) { // не пиздеть, весь сайт сделан за один день
     const weekdays = ["mon","tue","wed","thu","fri","sat","sun"];
-    const daysForms = ["день", "дня", "дня", "дня", "дней", "дней", "дней"]
+    const daysForms = ["день", "дня", "дня", "дня", "дней", "дней", "дней"];
     const currentDate = new Date();
     let upperText = "Ошибка";
     let currentTime = 60 * currentDate.getHours() + currentDate.getMinutes();
