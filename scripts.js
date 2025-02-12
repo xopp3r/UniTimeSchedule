@@ -1,9 +1,10 @@
 
 
-async function init() {
+async function init() {    
 
     if (document.schedule === undefined) {
         document.schedule = await fetchSchedule();
+        setInterval(init, 60000); // update every minute to keep text accurate
     }
 
     if (document.selectedWeekday === undefined) {
@@ -100,15 +101,16 @@ function displayWeekdays(selectedWeekday) {
     const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
 
     const today = new Date();
+    const todayWeekday = (today.getDay() + 6) % 7;
 
     let monday = new Date(today);
-    monday.setDate(today.getDate() - (today.getDay() + 6) % 7);
+    monday.setDate(today.getDate() - todayWeekday);
 
     for (let i = 0; i < 6; i++) { // set to 7 for sunday
         const day = new Date(monday);
-        day.setDate(monday.getDate() + i);
+        day.setDate(monday.getDate() + ( i >= todayWeekday   ? i : i + 7 ));
 
-        dayAndMonth = day.toLocaleDateString().split('.')
+        dayAndMonth = day.toLocaleDateString("ru-RU").split('.')
 
         addWeekdays(weekdays[(day.getDay() + 6) % 7], 
                     dayAndMonth[0] + ' ' + months[Number(dayAndMonth[1]) - 1],
@@ -148,10 +150,10 @@ function displaySchedule(schedule, weekdayIndex) { // не пиздеть, ве�
         
             if (lessonIncomingOrStarted) {
                 if (getMinutes(daySchedule[i]["start_time"]) <= currentTime){
-                    let minutes = getMinutes(daySchedule[i]["start_time"]) - currentTime;
-                    upperText = "Следующее занятие через " + (Math.floor(minutes/60) ? String(Math.floor(minutes/60)) + " часов ": "") + minutes + " минут";
+                    upperText = "Закончится через " + String(getMinutes(daySchedule[i]["end_time"]) - currentTime) + " мин";
                 } else {
-                    upperText = "Закончится через " + String(getMinutes(daySchedule[i]["end_time"]) - currentTime) + " минут";
+                    let minutes = getMinutes(daySchedule[i]["start_time"]) - currentTime;
+                    upperText = "Следующее занятие через " + (Math.floor(minutes/60) ? String(Math.floor(minutes/60)) + " часов ": "") + minutes%60 + " мин";
                 }
                 addLesson(daySchedule[i], true);
             } else {
