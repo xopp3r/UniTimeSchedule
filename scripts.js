@@ -107,7 +107,7 @@ function displayWeekdays(selectedWeekday) {
     let monday = new Date(today);
     monday.setDate(today.getDate() - todayWeekday);
 
-    for (let i = 0; i < 6; i++) { // set to 7 for sunday
+    for (let i = 0; i < 6; i++) { // set to 7 for displaying sunday
         const day = new Date(monday);
         day.setDate(monday.getDate() + ( i >= todayWeekday   ? i : i + 7 ));
 
