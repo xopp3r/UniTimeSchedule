@@ -10,6 +10,7 @@ async function init() {
     if (document.selectedWeekday === undefined) {
         const today = new Date();
         document.selectedWeekday = (today.getDay() + 6) % 7;
+        if (document.selectedWeekday !== 6) document.selectedWeekday = 0 // switch to monday if today is sunday
     } else {
         removeExisting();
     }
