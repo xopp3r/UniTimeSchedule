@@ -1,6 +1,6 @@
 :root {
     --primaryText: #463f3a;
-    --secondaryText: #8a817c;
+    --secondaryText: #5d4f47;
     --primaryBG: #f0eee3;
     --secondaryBG: #d3ccc4;
     --selected: #ef5743;
@@ -31,6 +31,7 @@ body {
 
 
 .weekday {
+    align-content: center;
     flex: 1 1;
     background: var(--primaryBG);
     border-radius: 8px;
@@ -41,7 +42,6 @@ body {
 
 .weekday h2 {
     margin: 0;
-    padding-top: 5px;
     font-size: 15px;
     text-align: center;
     color: var(--primaryText);
@@ -51,7 +51,7 @@ body {
 .weekday p {
     margin: 0;
     font-size: 10px;
-    text-align: center;
+    justify-self: center;
     color: var(--secondaryText);
 }
 
