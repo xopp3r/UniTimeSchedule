@@ -132,7 +132,7 @@ class App {
         weekdayDiv.appendChild(direction);
 
         weekdayDiv.addEventListener('click', function() {
-            reload(weekdayObj.weekdayIndex, weekdayObj.weekIndex + arrowDirection);
+            reload(weekdayObj.weekdayIndex, (weekdayObj.weekIndex + arrowDirection) % weekdayObj.cycle);
         });
 
         const container = document.getElementById('weekday_list');
@@ -140,15 +140,19 @@ class App {
     }
 
     displayArrow(direction){
+        const reletiveWeekIndex = (this.selectedWeekIndex - this.todayWeekIndex) + (this.selectedWeekIndex - this.todayWeekIndex < 0 ? this.scheduleCycle : 0);
+
         if (direction > 0){
-            if (this.selectedWeekIndex + 1 < this.scheduleCycle) {
+            if (reletiveWeekIndex < this.scheduleCycle - 1) {
                 this.addArrow({weekdayIndex: this.selectedWeekdayIndex,
-                               weekIndex: this.selectedWeekIndex}, direction);
+                               weekIndex: this.selectedWeekIndex,
+                               cycle: this.scheduleCycle}, direction);
             }
         } else {
-            if (this.selectedWeekIndex > 0) {
+            if (reletiveWeekIndex > 0) {
                 this.addArrow({weekdayIndex: this.selectedWeekdayIndex,
-                               weekIndex: this.selectedWeekIndex}, direction);
+                               weekIndex: this.selectedWeekIndex,
+                               cycle: this.scheduleCycle}, direction);
             }
         }
     }
@@ -227,7 +231,8 @@ class App {
         let text = "Ошибка";
         let lessonIndex = -1;
         
-        let daysTillselected = 7 * (this.selectedWeekIndex - this.todayWeekIndex) + this.selectedWeekdayIndex - this.todayWeekdayIndex;
+        const reletiveWeekIndex = (this.selectedWeekIndex - this.todayWeekIndex) + (this.selectedWeekIndex - this.todayWeekIndex < 0 ? this.scheduleCycle : 0);
+        let daysTillselected = 7 * reletiveWeekIndex + this.selectedWeekdayIndex - this.todayWeekdayIndex;
         
         if (daysTillselected < 0) {
             
@@ -265,6 +270,8 @@ class App {
                             (Math.floor((startTime - currentTime)/60)) + " часов " : "") 
                             + ((startTime - currentTime) % 60) + " мин.";
                         lessonIndex = i;
+
+                        break;
 
                     } else {
 
