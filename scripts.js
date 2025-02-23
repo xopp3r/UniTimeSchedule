@@ -1,11 +1,26 @@
 
 async function init() {
-    document.schedule = await loadSchedule("msu", "105", "1");
-    
-    reload();
+    const preferenses = loadPreferenses();
+
+    if (preferenses != null) {
+        document.schedule = await loadSchedule(preferenses.school, preferenses.group, preferenses.subgroup);
+        if (document.schedule == undefined) alert("Failed to load schedule");
+        
+        reload();
+    } else {
+        choosePreferences();
+    }
+
+    setInterval(reload, 60000); // update every minute to keep text accurate
+
 }
 
 function reload(selectedWeekdayIndex = -1, selectedWeekIndex = -1) {
+    if (document.app !== undefined) { // reload from existing app instance
+        if (selectedWeekdayIndex == -1) selectedWeekdayIndex = document.app.selectedWeekdayIndex;
+        if (selectedWeekIndex == -1) selectedWeekIndex = document.app.selectedWeekIndex;
+    }
+
     document.app = new App(document.schedule, selectedWeekdayIndex, selectedWeekIndex);
     document.app.displayWeekdays();
     document.app.displaySchedule();
@@ -13,6 +28,20 @@ function reload(selectedWeekdayIndex = -1, selectedWeekIndex = -1) {
 
 function loadPreferenses() {
     // loads settings from local storage
+    const school = localStorage.getItem("school");
+    const group = localStorage.getItem("group");
+    const subgroup = localStorage.getItem("subgroup");
+    
+    return (school != undefined && group != undefined && subgroup != undefined) ? 
+            {school: school, group: group, subgroup: subgroup} : null;
+}
+
+function choosePreferences(){
+    // todo
+    localStorage.setItem("school", "msu");
+    localStorage.setItem("group", "105");
+    localStorage.setItem("subgroup", "1");
+    init();
 }
 
 function fetchSchedule(name) {
@@ -32,8 +61,9 @@ function loadSchedule(school, group, subgroup) {
 
 function getWeekNumber(date = new Date()) {
     const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const startOfYearWeekIndex = (startOfYear.getDay() + 6) % 7;
     const diffInTime = date.getTime() - startOfYear.getTime();
-    const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+    const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24)) + startOfYearWeekIndex;
     
     return Math.floor(diffInDays / 7);
 }
@@ -45,21 +75,65 @@ function getMinutes(str) {
 
 
 
+
+
+
 class App {
     constructor(schedule, selectedWeekdayIndex = -1, selectedWeekIndex = -1) {
         const today = new Date();
         const todayWeekdayIndex = ((today.getDay() + 6) % 7);
         
-        if (selectedWeekdayIndex == -1) selectedWeekdayIndex = todayWeekdayIndex;
-        if (selectedWeekIndex == -1) selectedWeekIndex = getWeekNumber(today) % schedule.cycle;
-
+        
         this.schedule = schedule;
-        this.todayWeekdayIndex = todayWeekdayIndex;
-        this.selectedWeekdayIndex = selectedWeekdayIndex;
         this.scheduleCycle = schedule.cycle;
+        
+        this.todayWeekdayIndex = todayWeekdayIndex;
         this.todayWeekIndex = (getWeekNumber(today)) % schedule.cycle;
-        this.selectedWeekIndex = selectedWeekIndex;
+        
+        if (selectedWeekdayIndex == -1 || selectedWeekIndex == -1) { // if it is fresh start of application
+            const nextLessonIndexes = this.getNextLessonIndexes();
+
+            this.selectedWeekdayIndex = nextLessonIndexes.weekdayIndex;
+            this.selectedWeekIndex = nextLessonIndexes.weekIndex;
+
+        } else {
+            this.selectedWeekdayIndex = selectedWeekdayIndex;
+            this.selectedWeekIndex = selectedWeekIndex;
+        }
+
     }
+
+    // selects a next day that has upcoming lessons, skips empty and ended days
+    getNextLessonIndexes(){
+        
+        for (let i = 0; i < this.scheduleCycle; i++) {
+            
+            for (let j = 0; j < 7; j++) {
+
+                const selectedDaySchedule = this.schedule.schedule[(this.todayWeekIndex + i) % this.scheduleCycle][
+                    ["mon","tue","wed","thu","fri","sat","sun"].at((this.todayWeekdayIndex + j) % 7)
+                ]
+                
+                const ttext = this.resolveState(selectedDaySchedule).timingText;
+
+                if (ttext != "Сегодня занятия кончились" && ttext != "Занятий нет"){ // xdddddddd not sorry)))
+                    return {
+                        weekIndex: this.todayWeekIndex + i,
+                        weekdayIndex: this.todayWeekdayIndex + j
+                    }
+                }
+                
+            }
+            
+        }
+    
+        // not found anything
+        return {
+            weekIndex: this.todayWeekIndex,
+            weekdayIndex: this.todayWeekdayIndex
+        }
+    }
+
 
     // creates html element and adds to page
     addLesson(lesson, highlighted) {
@@ -132,7 +206,11 @@ class App {
         weekdayDiv.appendChild(direction);
 
         weekdayDiv.addEventListener('click', function() {
-            reload(weekdayObj.weekdayIndex, (weekdayObj.weekIndex + arrowDirection) % weekdayObj.cycle);
+            reload(weekdayObj.weekdayIndex, 
+                (weekdayObj.weekIndex + arrowDirection > 0 ? 
+                    weekdayObj.weekIndex + arrowDirection : 
+                    weekdayObj.weekIndex + arrowDirection + weekdayObj.cycle) 
+                % weekdayObj.cycle);
         });
 
         const container = document.getElementById('weekday_list');
@@ -188,7 +266,6 @@ class App {
         }
         
 
-        if (selectedDaySchedule.length == 0) state.timingText = "Занятий нет";
         document.getElementById("timing_text").innerHTML = "<strong>" + state.timingText + "<strong>";
 
     }
@@ -287,6 +364,7 @@ class App {
 
         }
         
+        if (daySchedule.length == 0) text = "Занятий нет";
 
         return {
             highlightedLessonIndex: lessonIndex,
