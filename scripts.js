@@ -114,7 +114,11 @@ class App {
                     ["mon","tue","wed","thu","fri","sat","sun"].at((this.todayWeekdayIndex + j) % 7)
                 ]
                 
-                const ttext = this.resolveState(selectedDaySchedule).timingText;
+                const ttext = this.resolveState(selectedDaySchedule, 
+                    (this.todayWeekIndex + i) % this.scheduleCycle,
+                    (this.todayWeekdayIndex + j) % 7,
+                ).timingText;
+
 
                 if (ttext != "Сегодня занятия кончились" && ttext != "Занятий нет"){ // xdddddddd not sorry)))
                     return {
@@ -304,12 +308,17 @@ class App {
 
     }
 
-    resolveState(daySchedule) {
+    resolveState(daySchedule, selectedWeekdayIndexOverride = -1, selectedWeekIndexOverride = -1) {
         let text = "Ошибка";
         let lessonIndex = -1;
+
+        if (selectedWeekIndexOverride == -1 || selectedWeekdayIndexOverride == -1){
+            selectedWeekIndexOverride = this.selectedWeekIndex;
+            selectedWeekdayIndexOverride = this.selectedWeekdayIndex;
+        }
         
-        const reletiveWeekIndex = (this.selectedWeekIndex - this.todayWeekIndex) + (this.selectedWeekIndex - this.todayWeekIndex < 0 ? this.scheduleCycle : 0);
-        let daysTillselected = 7 * reletiveWeekIndex + this.selectedWeekdayIndex - this.todayWeekdayIndex;
+        const reletiveWeekIndex = (selectedWeekIndexOverride - this.todayWeekIndex) + (selectedWeekIndexOverride - this.todayWeekIndex < 0 ? this.scheduleCycle : 0);
+        let daysTillselected = 7 * reletiveWeekIndex + selectedWeekdayIndexOverride - this.todayWeekdayIndex;
         
         if (daysTillselected < 0) {
             
