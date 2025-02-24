@@ -148,23 +148,43 @@ class App {
             lessonDiv.classList.add('selected'); 
         }
 
+        
+        
         const heading = document.createElement('h2');
         heading.textContent = lesson.name;
-
+        
         const timeParagraph = document.createElement('p');
         timeParagraph.textContent = lesson.start_time + ' - ' + lesson.end_time;
-
+        
         const roomParagraph = document.createElement('p');
         roomParagraph.textContent = 'каб. ' + lesson.room;
-
+        
         const teacherParagraph = document.createElement('p');
         teacherParagraph.textContent = lesson.teacher;
+        
 
+        
+        const lesson_detailsDiv = document.createElement('div');
+        lesson_detailsDiv.classList.add('lesson_details');
+
+        const timeDiv = document.createElement('div');
+        timeDiv.classList.add('time');
+
+        const additional_infoDiv = document.createElement('div');
+        additional_infoDiv.classList.add('additional_info');
+        
+        
+        
         lessonDiv.appendChild(heading);
-        lessonDiv.appendChild(timeParagraph);
-        lessonDiv.appendChild(roomParagraph);
-        lessonDiv.appendChild(teacherParagraph);
 
+        timeDiv.appendChild(timeParagraph);
+        additional_infoDiv.appendChild(roomParagraph);
+        additional_infoDiv.appendChild(teacherParagraph);
+        
+        lesson_detailsDiv.appendChild(timeDiv);
+        lesson_detailsDiv.appendChild(additional_infoDiv);
+        
+        lessonDiv.appendChild(lesson_detailsDiv);
 
         const container = document.getElementById('lesson_list');
         container.appendChild(lessonDiv);

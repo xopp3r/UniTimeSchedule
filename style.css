@@ -78,12 +78,33 @@ body {
 }
 
 
-.lesson p {
-    margin: 2px 0;
-    font-size: 12px;
-    color: var(--secondaryText);
+.lesson_details {
+    display: flex;
 }
 
+
+.time {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-inline: 5px;
+    font-weight: bold;
+    color: var(--primaryText);    
+}
+
+
+.additional_info {
+    flex: 1;
+    font-size: 12px;
+    text-align: right;
+    align-content: center;
+}
+
+.lesson_details p {
+    margin: 2px 0;
+    color: var(--secondaryText);
+
+}
 
 .selected {
     border: 2px, solid, var(--selected);
