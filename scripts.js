@@ -346,7 +346,7 @@ class App {
             
         } else if (daysTillselected > 0) {
 
-            daysTillselected--; // через 1 день != завтра
+            daysTillselected--; // через 1 день != завтра (?)
 
             if (daysTillselected == 0 || daysTillselected == 1){
                 text = ["Завтра","Послезавтра"].at(daysTillselected);    
