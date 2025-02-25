@@ -115,8 +115,8 @@ class App {
                 ]
                 
                 const ttext = this.resolveState(selectedDaySchedule, 
-                    (this.todayWeekIndex + i) % this.scheduleCycle,
                     (this.todayWeekdayIndex + j) % 7,
+                    (this.todayWeekIndex + i) % this.scheduleCycle
                 ).timingText;
 
 
