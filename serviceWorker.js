@@ -19,3 +19,15 @@ self.addEventListener('install', (event) => {
       .then((cache) => cache.addAll(urlsToCache))
   );
 });
+
+
+self.addEventListener('fetch', function(event) {
+  // Перехватываем запросы и возвращаем закешированные данные
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        // Возвращаем кешированный ресурс или делаем запрос к сети
+        return response || fetch(event.request);
+      })
+  );
+});
