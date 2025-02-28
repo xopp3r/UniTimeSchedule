@@ -36,6 +36,18 @@ function loadPreferenses() {
             {school: school, group: group, subgroup: subgroup} : null;
 }
 
+function registerServiceWorker(){
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then((registration) => {
+            console.log('Service Worker зарегистрирован:', registration);
+          })
+          .catch((error) => {
+            console.log('Ошибка регистрации Service Worker:', error);
+          });
+      }
+}
+
 function choosePreferences(){
     // todo
     localStorage.setItem("school", "msu");
