@@ -3,12 +3,12 @@
     "name": "MSU schedule",
     "icons": [
       {
-        "src": "assets/icon192.png",
+        "src": "/UniTimeSchedule/assets/icon192.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "assets/icon512.png",
+        "src": "/UniTimeSchedule/assets/icon512.png",
         "sizes": "512x512",
         "type": "image/png"
       }
