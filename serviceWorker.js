@@ -8,7 +8,16 @@ const urlsToCache = [
   '/index.html',
   '/manifest.json',
   '/msu_105_1.json',
-  '/style.css'
+  '/style.css',
+  '/UniTimeSchedule/',
+  '/UniTimeSchedule/assets/icon192.png',
+  '/UniTimeSchedule/assets/icon512.png',
+  '/UniTimeSchedule/serviceWorker.js',
+  '/UniTimeSchedule/scripts.js',
+  '/UniTimeSchedule/index.html',
+  '/UniTimeSchedule/manifest.json',
+  '/UniTimeSchedule/msu_105_1.json',
+  '/UniTimeSchedule/style.css'
 ];
 
 
