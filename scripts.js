@@ -117,31 +117,27 @@ class App {
 
     // selects a next day that has upcoming lessons, skips empty and ended days
     getNextLessonIndexes(){
-        
-        for (let i = 0; i < this.scheduleCycle; i++) {
+
+        for (let i = this.todayWeekdayIndex; i < 7 * this.scheduleCycle; i++){
+            const weekdayIndex = i % 7;
+            const weekIndex = Math.floor(i / 7);
             
-            for (let j = 0; j < 7; j++) {
-
-                const selectedDaySchedule = this.schedule.schedule[(this.todayWeekIndex + i) % this.scheduleCycle][
-                    ["mon","tue","wed","thu","fri","sat","sun"].at((this.todayWeekdayIndex + j) % 7)
-                ]
-                
-                const ttext = this.resolveState(selectedDaySchedule, 
-                    (this.todayWeekdayIndex + j) % 7,
-                    (this.todayWeekIndex + i) % this.scheduleCycle
-                ).timingText;
-
-
-                if (ttext != "Сегодня занятия кончились" && ttext != "Занятий нет"){ // xdddddddd not sorry)))
-                    return {
-                        weekIndex: this.todayWeekIndex + i,
-                        weekdayIndex: this.todayWeekdayIndex + j
-                    }
+            const selectedDaySchedule = this.schedule.schedule[weekIndex][
+                ["mon","tue","wed","thu","fri","sat","sun"].at(weekdayIndex)
+            ]
+            
+            const ttext = this.resolveState(selectedDaySchedule, weekdayIndex, weekIndex).timingText;
+    
+            if (ttext != "Сегодня занятия кончились" && ttext != "Занятий нет"){ // xdddddddd not sorry)))
+                return {
+                    weekIndex: weekIndex,
+                    weekdayIndex: weekdayIndex
                 }
-                
             }
-            
+
         }
+
+                
     
         // not found anything
         return {
