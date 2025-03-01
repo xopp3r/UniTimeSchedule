@@ -120,7 +120,7 @@ class App {
 
         for (let i = this.todayWeekdayIndex; i < 7 * this.scheduleCycle; i++){
             const weekdayIndex = i % 7;
-            const weekIndex = Math.floor(i / 7);
+            const weekIndex = (this.todayWeekIndex + Math.floor(i / 7)) % this.scheduleCycle;
             
             const selectedDaySchedule = this.schedule.schedule[weekIndex][
                 ["mon","tue","wed","thu","fri","sat","sun"].at(weekdayIndex)
