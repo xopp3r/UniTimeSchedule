@@ -12,7 +12,7 @@ async function init() {
     }
 
     setInterval(reload, 60000); // update every minute to keep text accurate
-
+    registerServiceWorker()
 }
 
 function reload(selectedWeekdayIndex = -1, selectedWeekIndex = -1) {
