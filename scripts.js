@@ -11,7 +11,7 @@ async function init() {
         choosePreferences();
     }
 
-    setInterval(reload, 60000); // update every minute to keep text accurate
+    setInterval(reload, 10000); // update every minute to keep text accurate
     registerServiceWorker()
 }
 
@@ -165,7 +165,7 @@ class App {
         timeParagraph.textContent = lesson.start_time + ' - ' + lesson.end_time;
         
         const roomParagraph = document.createElement('p');
-        roomParagraph.textContent = 'каб. ' + lesson.room;
+        roomParagraph.textContent = (lesson.room == '') ? '' : 'каб. ' + lesson.room;
         
         const teacherParagraph = document.createElement('p');
         teacherParagraph.textContent = lesson.teacher;
