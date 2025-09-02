@@ -11,7 +11,7 @@ async function init() {
         choosePreferences();
     }
 
-    setInterval(reload, 10000); // update every minute to keep text accurate
+    setInterval(reload, 10000); // update every 10 secs to keep text accurate
     registerServiceWorker()
 }
 
@@ -38,14 +38,23 @@ function loadPreferenses() {
 
 function registerServiceWorker(){
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/serviceWorker.js')
-          .then((registration) => {
-            console.log('Service Worker зарегистрирован:', registration);
-          })
-          .catch((error) => {
-            console.log('Ошибка регистрации Service Worker:', error);
-          });
-      }
+        window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+            console.log('ServiceWorker зарегистрирован: ', registration);
+            
+            // Проверяем обновления
+            registration.addEventListener('updatefound', () => {
+                console.log('Обнаружено обновление Service Worker');
+            });
+            })
+            .catch(function(error) {
+            console.log('Ошибка регистрации ServiceWorker: ', error);
+            });
+        });
+    } else {
+        console.log('Service Worker не поддерживается');
+    }
 }
 
 function choosePreferences(){
